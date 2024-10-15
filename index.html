@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Product Information</title>
+</head>
+<body>
+    <h1>Lab 2</h1>
+    <div id="product-container"></div>
+
+    <script>
+        const apiUrl = 'https://world.openfoodfacts.org/api/v0/product/737628064502.json';
+
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 1) {
+                    const product = data.product;
+                    const productHtml = `
+                        <div class="product-info">
+                            <img src="${product.image_url}" alt="${product.product_name}" class="product-image">
+                            <div class="info-item"><span class="info-label">Name:</span> ${product.product_name}</div>
+                            <div class="info-item"><span class="info-label">Brand:</span> ${product.brands}</div>
+                            <div class="info-item"><span class="info-label">Quantity:</span> ${product.quantity}</div>
+                            <div class="info-item"><span class="info-label">Categories:</span> ${product.categories}</div>
+                            <div class="info-item"><span class="info-label">Ingredients:</span> ${product.ingredients_text}</div>
+                            <div class="info-item"><span class="info-label">Allergens:</span> ${product.allergens}</div>
+                            <div class="info-item"><span class="info-label">Nutrition Grade:</span> ${product.nutrition_grades_tags[0].toUpperCase()}</div>
+                        </div>
+                    `;
+                    document.getElementById('product-container').innerHTML = productHtml;
+                } else {
+                    document.getElementById('product-container').innerHTML = '<p id="error-message">Product not found</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('product-container').innerHTML = '<p id="error-message">An error occurred while fetching the data</p>';
+            });
+    </script>
+</body>
+</html>
